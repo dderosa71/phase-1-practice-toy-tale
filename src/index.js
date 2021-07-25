@@ -27,6 +27,12 @@ fetch(toyURL)
     cardCollection = document.querySelector('#toy-collection')
     for (let index = 0; index < toys.length; index++){
         createCard(toys[index], cardCollection)
+        //Below is not working
+        //Using this to add an event listener
+        //Think the problem is that I don't have the button element found
+        console.log(cardCollection, toys[index].id, toys[index].likes)
+        console.log(cardCollection.querySelector(`#${toys[index].id}`))
+        clickListener(cardCollection.querySelector(`#${toys[index].id}`), toys[index].id ,toys[index].likes)
     }
   })
 
@@ -35,20 +41,21 @@ fetch(toyURL)
     <div class="card">
     <h2>${data.name}</h2>
     <img src="${data.image}" class="toy-avatar" />
-    <p>4 Likes </p>
-    <button onclick="btnClick(${data.id},${data.likes})" class="like-btn" id="${data.id}">Like <3</button>
-  </div> 
-    `
-  }
+    <p>${data.likes} Likes </p>
+    <button class="like-btn" id="${data.id}">Like <3</button>
+  </div> ]
+    `}
+  
+   
 
-  function btnClick(id, currentLikes){
-    fetch(`${toyURL}${id}`,createPatchLikeSettings(currentLikes))
-    .then(resp => console.log(resp))
-    
-  }
+function clickListener(element, id, likes){element.addEventListener('click',
+() =>  {fetch(`${toyURL}${id}`), createPatchLikeSettings(likes)
+  } 
+  )}
 
 function createPatchLikeSettings(likeCount){
-  // likeCount++
+  likeCount++
+  console.log('settings Fired')
   return{
    method : "PATCH",
    headers : 
@@ -68,9 +75,11 @@ function createPatchLikeSettings(likeCount){
 //   console.log(textInputs[x])
 // }
 
-//********************************* */
-//This section adds new toys
-//******************************** */
+// ********************************* */
+// This section adds new toys
+// ******************************** */
+const example = document.querySelector('.class')
+
 document.addEventListener('submit', (e) => {
   e.preventDefault()
   const toyURL = e.target.children[3].value;
