@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
 //This section creates the cards
 //******************************** */
 
-fetch("http://localhost:3000/toys")
+const toyURL = 'http://localhost:3000/toys/'
+fetch(toyURL)
   .then(resp => resp.json())
   // .then(another => console.log(another))
   .then(toys => {
@@ -35,10 +36,32 @@ fetch("http://localhost:3000/toys")
     <h2>${data.name}</h2>
     <img src="${data.image}" class="toy-avatar" />
     <p>4 Likes </p>
-    <button class="like-btn" id="${data.id}">Like <3</button>
+    <button onclick="btnClick(${data.id},${data.likes})" class="like-btn" id="${data.id}">Like <3</button>
   </div> 
     `
   }
+
+  function btnClick(id, currentLikes){
+    fetch(`${toyURL}${id}`,createPatchLikeSettings(currentLikes))
+    .then(resp => console.log(resp))
+    
+  }
+
+function createPatchLikeSettings(likeCount){
+  // likeCount++
+  return{
+   method : "PATCH",
+   headers : 
+   {
+     "Content-Type": "application/json",
+              "Accept": "application/json" 
+             },
+   body: JSON.stringify(
+   {"likes": `${likeCount}`}
+   )
+ } 
+ }
+
 // const textInputs = document.querySelectorAll('.input-text');
 // const toyForm = document.querySelector('.submit')
 // for (let x = 0; x > textInputs.length; x++){
@@ -79,28 +102,13 @@ function createPostSettings(name, URL){
 //This section adds points to the cards
 //******************************** */
 
-const likeButtons = document.querySelectorAll('like-btn');
-console.log(likeButtons)
-for(let index = 0; index < likeButtons.length; index++){
-  document.addEventListener('click', e => {
-    console.log(likeButtons[index].previousSibling)
-    // fetch('http://localhost:3000/toys',)
-  } )
-}
+// const likeButtons = document.querySelectorAll('.like-btn');
+// console.log(likeButtons)
+// for(let index = 0; index < likeButtons.length; index++){
+//   document.addEventListener('click', e => {
+//     console.log(likeButtons[index].previousSibling)
+//     // fetch('http://localhost:3000/toys',)
+//   } )
+// }
 
 
-// function createPostSettings(name, URL){
-//   return{
-//    method : "POST",
-//    headers : 
-//    {
-//      "Content-Type": "application/json",
-//               "Accept": "application/json" 
-//              },
-//    body: JSON.stringify(
-//    {"name": `${name}`,
-//    "image": `${URL}`,
-//    "likes": 0}
-//    )
-//  } 
-//  }
