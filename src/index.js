@@ -41,11 +41,12 @@ fetch(toyURL)
     //   clickListener(toyElems[i]);
       
     // }
-    function currrentLikeCount(id){
-      fetch(`${toyURL}${id}`)
-      .then(resp=> console.log(resp.json()))
-      .then(result => console.log(result))
-    }
+    // function currrentLikeCount(id){
+    //   fetch(`${toyURL}${id}`)
+    //   .then(resp=> console.log(resp.json()))
+    //   .then(result => console.log(result))
+    // }
+    console.log(toyElems)
     toyElems.forEach((elem) => {clickListener(elem, elem.id)
     
     })
@@ -59,28 +60,32 @@ fetch(toyURL)
     <h2>${data.name}</h2>
     <img src="${data.image}" class="toy-avatar" />
     <p>${data.likes} Likes </p>
-    <button class="like-btn" id="${data.id}">Like <3</button>
+    <button type="button" class="like-btn" id="${data.id}">Like <3</button>
     </div> 
     `}
     
     
     
-function clickListener(element, id){
-  element.addEventListener('click', (e) => {
+    function clickListener(element, id){
+      element.addEventListener('click', (e) => {
+    console.log(element, 'inside click listener')
+  
+  console.log(e)
   e.preventDefault()
   let [currentLikes,] = e.target.previousElementSibling.innerHTML.split(" ")
   const likeElement = document.querySelector('.id')
   
-  fetch(`${toyURL}${id}`, {
-    method : "PATCH",
-    headers : 
-    {
-      "Content-Type": "application/json"
-              },
-    body: JSON.stringify(
-    {likes: `${currentLikes++}`})
-  })
-    
+  console.log(id, 'inside click listener')
+  // fetch(`${toyURL}${id}`, {
+  //   method : "PATCH",
+  //   headers : 
+  //   {
+  //     "Content-Type": "application/json"
+  //             },
+  //   body: JSON.stringify(
+  //   {likes: `${currentLikes++}`})
+  // })
+   
   })
 }
   
