@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   addBtn.addEventListener("click", () => {
     // hide & seek with the form
     addToy = !addToy;
-    console.log('DOMDOMDOM')
     if (addToy) {
       toyFormContainer.style.display = "block";
     } else {
@@ -23,18 +22,33 @@ document.addEventListener("DOMContentLoaded", () => {
 const toyURL = 'http://localhost:3000/toys/'
 fetch(toyURL)
 .then(resp => resp.json())
-// .then(another => console.log(another))
 .then(toys => {
-  cardCollection = document.querySelector('#toy-collection')
-  for (let index = 0; index < toys.length; index++){
-    createCard(toys[index], cardCollection)
+  let cardCollection = document.querySelector('#toy-collection')
+  for (let i = 0; i < toys.length; i++){
+    createCard(toys[i], cardCollection)
     //Below is not working
     //Using this to add an event listener
     //Think the problem is that I don't have the button element found
-    // console.log(cardCollection, toys[index].id, toys[index].likes)
-    // console.log(cardCollection.querySelector(`#${toys[index].id}`))
-    clickListener(document.getElementById(`${toys[index].id}`), toys[index].id ,toys[index].likes)
+    // console.log(cardCollection, toys[i].id, toys[i].likes)
+    // console.log(cardCollection.querySelector(`#${toys[i].id}`))
+    
+    // const elem = document.getElementById(`${toys[i].id}`)
+    // console.log(elem)
+    // clickListener(elem, toys[i].id ,toys[i].likes)
   }
+    const toyElems = document.querySelectorAll('.like-btn')
+    // for (let i = 0; i < toyElems.length; i++) {
+    //   clickListener(toyElems[i]);
+      
+    // }
+    function currrentLikeCount(id){
+      fetch(`${toyURL}${id}`)
+      .then(resp=> console.log(resp.json()))
+      .then(result => console.log(result))
+    }
+    toyElems.forEach((elem) => {clickListener(elem, elem.id)
+    
+    })
   })
   
   
@@ -46,32 +60,49 @@ fetch(toyURL)
     <img src="${data.image}" class="toy-avatar" />
     <p>${data.likes} Likes </p>
     <button class="like-btn" id="${data.id}">Like <3</button>
-    </div> ]
+    </div> 
     `}
     
     
     
-    function clickListener(element, id, likes){
-      element.addEventListener('click', console.log)
+function clickListener(element, id){
+  element.addEventListener('click', (e) => {
+  e.preventDefault()
+  let [currentLikes,] = e.target.previousElementSibling.innerHTML.split(" ")
+  const likeElement = document.querySelector('.id')
+  
+  fetch(`${toyURL}${id}`, {
+    method : "PATCH",
+    headers : 
+    {
+      "Content-Type": "application/json"
+              },
+    body: JSON.stringify(
+    {likes: `${currentLikes++}`})
+  })
+    
+  })
+}
+  
       // debugger;
       // element.addEventListener('click',() =>  {
   // console.log('Im here!')
   // fetch(`${toyURL}${id}`), createPatchLikeSettings(likes)
+
   // } )
-}
+// }
 
 function createPatchLikeSettings(likeCount){
-  likeCount++
-  console.log('settings Fired')
+  // likeCount++
+  // console.log('settings Fired')
   return{
    method : "PATCH",
    headers : 
    {
-     "Content-Type": "application/json",
-              "Accept": "application/json" 
+     "Content-Type": "application/json"
              },
    body: JSON.stringify(
-   {"likes": `${likeCount}`}
+   {likes: `${likeCount}`}
    )
  } 
  }
